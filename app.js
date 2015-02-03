@@ -12,7 +12,7 @@ var bodyParser = require("body-parser");
 var mongoose = require('mongoose');
 
 // Get config data for mongoDB.
-var mongoConfig = require('./config/mongo.js');
+var mongoConfig = require('./config/mongo.example.js');
 
 //==== Use pets! ==========================================================
 
