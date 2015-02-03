@@ -1,0 +1,21 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<hr>
+<div class="container">
+    <ul class="list-group">
+        <li class="list-group-item">
+
+            <form ng-submit="addClass()">
+                <input ng-model="classField" type="text" size="25" placeholder="Add your class here!">
+                <input ng-model="gradeField" type="text" size="25" placeholder="What was your grade?">
+                <input ng-model="creditField" type="text" size="25" placeholder="How many credits?">
+                <input type="submit" value="submit" class="btn btn-primary">
+                <span class="floatRight">Items in this list: {{itemsInList()}}</span>
+            </form>
+
+        </li>
+        <li class="list-group-item" ng-repeat="test in data">{{test.text}}........{{test.weight}}lbs<span class="glyphicon glyphicon-trash floatRight" style="color: red" ng-click="removeData($index)"></span></li>
+    </ul>
+</div>
+
+        <!-- TODO: Make it list the classes and their info, make it pretty -->
