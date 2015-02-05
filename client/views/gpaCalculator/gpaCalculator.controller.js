@@ -11,7 +11,7 @@ angular.module("appModule")
         $scope.creditField = "";
 
         // Normally, data like this would be stored in a database, and this controller would issue an http:get request for it.
-        $scope.data = [];
+        $scope.classes = [];
 
         $scope.getClasses = function () {
             $http.get('api/classes').success(function (classes) {
@@ -39,7 +39,7 @@ angular.module("appModule")
         };
 
         $scope.itemsInList = function () {
-            return $scope.data.length;
+            return $scope.classes.length;
         };
 
     });
