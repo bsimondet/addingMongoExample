@@ -11,7 +11,7 @@ angular.module("appModule")
         $scope.creditField = "";
 
         // Normally, data like this would be stored in a database, and this controller would issue an http:get request for it.
-        $scope.classes = [];
+        $scope.classes = [{class: "math", grade:"A", credits:"4"}];
 
         $scope.getClasses = function () {
             $http.get('api/classes').success(function (classes) {
@@ -32,8 +32,8 @@ angular.module("appModule")
             }
         };
 
-        $scope.removeData = function (index) {
-            $http.delete('/api/classes/' + $scope.data[index]._id).success(function () {
+        $scope.removeClass = function (index) {
+            $http.delete('/api/classes/' + $scope.classes[index]._id).success(function () {
                 $scope.getClasses();
             });
         };
@@ -41,5 +41,9 @@ angular.module("appModule")
         $scope.itemsInList = function () {
             return $scope.classes.length;
         };
+
+        $scope.currentGpa = function(){
+            return 4;
+        }
 
     });

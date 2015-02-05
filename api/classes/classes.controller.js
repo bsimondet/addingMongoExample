@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 // Defining Model
 // =====================================================
 
-var Classes = mongoose.model('Class', {
+var dbClass = mongoose.model('Classes', {
     class: String,
     grade: String,
     credits: String
@@ -15,38 +15,37 @@ var Classes = mongoose.model('Class', {
 // =====================================================
 
 exports.index = function(req, res) {
-    Classes.find(function (err, classes) {
+    dbClass.find(function (err, classes) {
         if (err) {
             console.log("Error getting data from database");
             res.send(err)
         } else {
-            res.json(pets); // return results
+            res.json(classes); // return results
         }
     });
 };
 
 exports.create = function(req, res) {
-    Classes.create(req.body, function (err, classes) {
+    dbClass.create(req.body, function (err,classes) {
         if (err) {
             res.send(err);
         } else {
-            Classes.find(function (err, pets) {
+            dbClass.find(function (err, classes) {
                 if (err) {
                     res.send(err);
                 }
-
-                res.json(pets);
+                res.json(classes);
             });
         }
     });
 };
 
 exports.destroy = function(req, res) {
-    Classes.findById(req.params.class_id, function(err, classes){
+    dbClass.findById(req.params.class_id, function(err, dbClass){
         if(err) { res.send(err); return "error: " + err; }
-        if(!classes) { return res.sendStatus(404); }
+        if(!dbClass) { return res.sendStatus(404); }
 
-        Classes.remove(function(err){
+        dbClass.remove(function(err){
             if(err) { return "error: " + err}
             return res.sendStatus(204);
         });

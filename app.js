@@ -42,7 +42,7 @@ var options = {
 // API Routes
 app.use('/api/pets', require('./api/pets'));
 
-app.use('/api/classes', require('./api/classes'));
+app.use('/api/dbClass', require('./api/classes'));
 
 // Non-API routes
 app.get('/*', function(req, res){
