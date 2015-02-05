@@ -10,11 +10,11 @@
                 <input ng-model="gradeField" type="text" size="25" placeholder="What was your grade?">
                 <input ng-model="creditField" type="text" size="25" placeholder="How many credits?">
                 <input type="submit" value="submit" class="btn btn-primary">
-                <span class="floatRight">Items in this list: {{itemsInList()}}</span>
+                <span class="floatRight">Classes in this calculator: {{itemsInList()}}</span>
             </form>
 
         </li>
-        <li class="list-group-item" ng-repeat="test in data">{{test.text}}........{{test.weight}}lbs<span class="glyphicon glyphicon-trash floatRight" style="color: red" ng-click="removeData($index)"></span></li>
+        <li class="list-group-item" ng-repeat="test in classes">{{test.class}}........{{test.grade}}........{{test.credits}}lbs<span class="glyphicon glyphicon-remove floatRight" style="color: red" ng-click="removeData($index)"></span></li>
     </ul>
 </div>
 
