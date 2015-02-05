@@ -15,7 +15,7 @@ angular.module("appModule")
 
         $scope.getClasses = function () {
             $http.get('api/classes').success(function (classes) {
-                $scope.data = classes;
+                $scope.classes = classes;
             });
         };
 

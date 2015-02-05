@@ -20,7 +20,7 @@ exports.index = function(req, res) {
             console.log("Error getting data from database");
             res.send(err)
         } else {
-            res.json(classes); // return results
+            res.json(pets); // return results
         }
     });
 };
@@ -30,12 +30,12 @@ exports.create = function(req, res) {
         if (err) {
             res.send(err);
         } else {
-            Classes.find(function (err, classes) {
+            Classes.find(function (err, pets) {
                 if (err) {
                     res.send(err);
                 }
 
-                res.json(classes);
+                res.json(pets);
             });
         }
     });

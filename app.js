@@ -1,7 +1,4 @@
 
-//TODO: clean up comments!
-//TODO: fix bodyparser stuff!
-
 
 //==== Require Things! ==========================================
 
@@ -44,6 +41,7 @@ var options = {
 
 // API Routes
 app.use('/api/pets', require('./api/pets'));
+app.use('/api/classes', require('./api/classes'));
 
 // Non-API routes
 app.get('/*', function(req, res){
