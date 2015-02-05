@@ -41,6 +41,7 @@ var options = {
 
 // API Routes
 app.use('/api/pets', require('./api/pets'));
+
 app.use('/api/classes', require('./api/classes'));
 
 // Non-API routes
