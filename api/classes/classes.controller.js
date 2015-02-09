@@ -41,7 +41,7 @@ exports.create = function(req, res) {
 };
 
 exports.destroy = function(req, res) {
-    dbClass.findById(req.params.class_id, function(err, dbClass){
+    dbClass.findById(req.params.classes_id, function(err, dbClass){
         if(err) { res.send(err); return "error: " + err; }
         if(!dbClass) { return res.sendStatus(404); }
 

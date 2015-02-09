@@ -4,46 +4,106 @@ angular.module("appModule")
     .controller('gpaCtrl', function($scope, $http) {
         console.log("GPA controller loaded!");
 
+        //Initialize all fields
         $scope.classField = "";
 
         $scope.gradeField = "";
 
         $scope.creditField = "";
 
+        var totalCredits = 0;
+        var totalGradePoint = 0;
+        var checks = 0;
+
         // Normally, data like this would be stored in a database, and this controller would issue an http:get request for it.
         $scope.classes = [];
 
+        //Adds classes found in the database
         $scope.getClasses = function(){
             $http.get('api/dbClass').success(function (classes) {
                 $scope.classes = classes;
             });
         };
-
         $scope.getClasses();
 
+        //Helper functions to determine if input is valid
+        $scope.creditCheck = function() {
+            if (!$scope.creditField.length === 1) {
+                alert("Please submit a valid number of credits.");
+                checks++;
+            } else if (isNaN($scope.creditField)) {
+                alert("Please submit a valid number of credits.");
+                checks++;
+            }
+        };
+
+        $scope.gradeCheck = function() {
+            if(!$scope.gradeField.length == 1) {
+                alert("Please submit a letter grade without a plus or minus.");
+                checks++;
+            } else if(!isNaN($scope.gradeField)){
+                alert("Please submit a letter grade without a plus or minus.");
+                checks++;
+            }
+        };
+
+        $scope.classCheck = function() {
+            if (!$scope.classField.length >= 1) {
+                alert("Please submit a class name.");
+                checks++;
+            }
+        };
+
+        //Main GPA functions
         $scope.addClass = function () {
-            if ($scope.classField.length >= 1) {
+            $scope.classCheck();
+            $scope.gradeCheck();
+            $scope.creditCheck();
+            if (checks === 0) {
                 $http.post('api/dbClass', {class: $scope.classField, grade:$scope.gradeField, credits:$scope.creditField}).success(function(){
                     $scope.getClasses();
                 });
+                totalCredits = totalCredits + parseInt($scope.creditField);
+                totalGradePoint = totalGradePoint + (parseInt($scope.creditField) * parseInt($scope.returnGradeValue($scope.gradeField.toUpperCase())));
                 $scope.classField = "";
                 $scope.gradeField = "";
                 $scope.creditField = "";
             }
+            checks = 0;
+            console.log("check = 0");
         };
 
         $scope.removeClass = function (index) {
-            $http.delete('/api/dbClass' + $scope.classes[index]._id).success(function () {
+            var gradeToRemove = $scope.returnGradeValue($scope.classes[index].grade);
+            var creditsToRemove = $scope.classes[index].credits;
+            totalGradePoint -= (gradeToRemove * creditsToRemove);
+            totalCredits -= creditsToRemove;
+            $http.delete('/api/dbClass/' + $scope.classes[index]._id).success(function () {
                 $scope.getClasses();
             });
         };
 
-        $scope.itemsInList = function () {
-            return $scope.classes.length;
+        //More helper functions for correctly displaying the GPA
+        $scope.currentGpa = function(){
+            return (totalGradePoint/totalCredits).toFixed(3);
         };
 
-        $scope.currentGpa = function(){
-            return 4;
-        }
+        $scope.totalCredits = function(){
+            return totalCredits;
+        };
+
+        $scope.returnGradeValue = function(str){
+            if (str === "A") {
+                return 4.0;
+            } else if (str === "B") {
+                return 3.0;
+            } else if (str === "C") {
+                return 2.0;
+            } else if (str === "D") {
+                return 1.0;
+            } else {
+                return 0;
+            }
+        };
 
     });

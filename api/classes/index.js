@@ -11,6 +11,6 @@ var router = express.Router();
 
 router.get('/', controller.index);
 router.post('/', controller.create);
-router.delete('/:class_id', controller.destroy);
+router.delete('/:classes_id', controller.destroy);
 
 module.exports = router;
