@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 var dbClass = mongoose.model('Classes', {
     class: String,
     grade: String,
-    credits: String
+    credits: Number
 });
 
 // Defining Routes

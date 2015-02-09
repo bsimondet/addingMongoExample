@@ -70,17 +70,21 @@ angular.module("appModule")
                 $scope.creditField = "";
             }
             checks = 0;
-            console.log("check = 0");
         };
 
         $scope.removeClass = function (index) {
-            var gradeToRemove = $scope.returnGradeValue($scope.classes[index].grade);
-            var creditsToRemove = $scope.classes[index].credits;
-            totalGradePoint -= (gradeToRemove * creditsToRemove);
-            totalCredits -= creditsToRemove;
             $http.delete('/api/dbClass/' + $scope.classes[index]._id).success(function () {
                 $scope.getClasses();
             });
+            var reevaluatedCredits = 0;
+            var reevaluatedGrades = 0;
+            for (var spot=0; spot<classes.length; spot++){
+                reevaluatedCredits += spot.credits;
+                reevaluatedGrades += $scope.returnGradeValue(spot.grade);
+            }
+            totalCredits = reevaluatedCredits;
+            totalGradePoint = totalCredits * reevaluatedGrades;
+            $scope.currentGpa();
         };
 
         //More helper functions for correctly displaying the GPA
