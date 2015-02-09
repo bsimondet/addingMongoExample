@@ -11,10 +11,10 @@ angular.module("appModule")
         $scope.creditField = "";
 
         // Normally, data like this would be stored in a database, and this controller would issue an http:get request for it.
-        $scope.classes = [{class: "math", grade:"A", credits:"4"}];
+        $scope.classes = [];
 
-        $scope.getClasses = function () {
-            $http.get('api/classes').success(function (classes) {
+        $scope.getClasses = function(){
+            $http.get('api/dbClass').success(function (classes) {
                 $scope.classes = classes;
             });
         };
@@ -23,7 +23,7 @@ angular.module("appModule")
 
         $scope.addClass = function () {
             if ($scope.classField.length >= 1) {
-                $http.post('api/classes', {class: $scope.classField, grade:$scope.gradeField, credits:$scope.creditField}).success(function () {
+                $http.post('api/dbClass', {class: $scope.classField, grade:$scope.gradeField, credits:$scope.creditField}).success(function(){
                     $scope.getClasses();
                 });
                 $scope.classField = "";
@@ -33,7 +33,7 @@ angular.module("appModule")
         };
 
         $scope.removeClass = function (index) {
-            $http.delete('/api/classes/' + $scope.classes[index]._id).success(function () {
+            $http.delete('/api/dbClass' + $scope.classes[index]._id).success(function () {
                 $scope.getClasses();
             });
         };
