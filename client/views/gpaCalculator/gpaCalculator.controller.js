@@ -14,14 +14,16 @@ angular.module("appModule")
         var totalCredits = 0;
         var totalGradePoint = 0;
 
-        $scope.totalCreditsFunction = function(totalCredits){
+        $scope.totalCreditsFunction = function(){
+            totalCredits = 0;
             for(var thing = 0; thing < $scope.classes.length; thing++){
                 totalCredits += classes[thing].credits;
             }
             return totalCredits;
         };
 
-        $scope.totalGradePointFunction = function(totalGradePoint){
+        $scope.totalGradePointFunction = function(){
+            totalGradePoint = 0;
             for(var thing = 0; thing < $scope.classes.length; thing++) {
                 totalGradePoint += ($scope.classes[i].grade * $scope.classes[i].credits);
             }
@@ -96,7 +98,7 @@ angular.module("appModule")
 
         //More helper functions for correctly displaying the GPA
         $scope.currentGpa = function(){
-            return ($scope.totalGradePointFunction(totalGradePoint)/$scope.totalCreditsFunction(totalCredits)).toFixed(3);
+            return ($scope.totalGradePointFunction()/$scope.totalCreditsFunction()).toFixed(3);
         };
 
 
