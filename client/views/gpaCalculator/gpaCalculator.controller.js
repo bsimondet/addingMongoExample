@@ -14,20 +14,22 @@ angular.module("appModule")
         var totalCredits = 0;
         var totalGradePoint = 0;
 
-        $scope.totalCreditsFunction = function(){
+        $scope.calculateTotalCredits = function(){
             totalCredits = 0;
             for(var thing = 0; thing < $scope.classes.length; thing++){
-                totalCredits += classes[thing].credits;
+                totalCredits += $scope.classes[thing].credits;
             }
-            return totalCredits;
+            console.log("total credits are "+ totalCredits);
+            //return totalCredits;
         };
 
-        $scope.totalGradePointFunction = function(){
+        $scope.calculateTotalGradePoint = function(){
             totalGradePoint = 0;
             for(var thing = 0; thing < $scope.classes.length; thing++) {
-                totalGradePoint += ($scope.classes[i].grade * $scope.classes[i].credits);
+                var gradeToAdd = parseInt($scope.returnGradeValue($scope.classes[thing].grade));
+                var creditsToAdd = parseInt($scope.classes[thing].credits);
+                totalGradePoint += gradeToAdd * creditsToAdd;
             }
-            return totalGradePoint;
         };
 
         var checks = 0;
@@ -75,7 +77,7 @@ angular.module("appModule")
         $scope.addClass = function () {
             $scope.classCheck($scope.classField);
             $scope.gradeCheck($scope.gradeField);
-            $scope.creditCheck(scope.creditField);
+            $scope.creditCheck($scope.creditField);
             if (checks === 0) {
                 $http.post('api/dbClass', {class: $scope.classField, grade:$scope.gradeField, credits:$scope.creditField}).success(function(){
                     $scope.getClasses();
@@ -98,7 +100,9 @@ angular.module("appModule")
 
         //More helper functions for correctly displaying the GPA
         $scope.currentGpa = function(){
-            return ($scope.totalGradePointFunction()/$scope.totalCreditsFunction()).toFixed(3);
+            $scope.calculateTotalCredits();
+            $scope.calculateTotalGradePoint();
+            return (totalGradePoint/totalCredits).toFixed(3);
         };
 
 
