@@ -11,8 +11,8 @@ angular.module("appModule")
 
         $scope.creditField = "";
 
-        var totalCredits = 0;
-        var totalGradePoint = 0;
+        $scope.totalCredits = 0;
+        $scope.totalGradePoint = 0;
         var checks = 0;
 
         // Normally, data like this would be stored in a database, and this controller would issue an http:get request for it.
@@ -25,6 +25,15 @@ angular.module("appModule")
             });
         };
         $scope.getClasses();
+
+        //Is supposed to continuously update the GPA
+        $scope.updateGPA = function() {
+            for (var i = 0; i < $scope.classes.length; i++){
+                $scope.totalCredits += $scope.classes[i].credits;
+                $scope.totalGradePoint += ($scope.classes[i].grade * $scope.classes[i].credits)/$scope.totalCredits;
+            }
+            return ($scope.totalGradePoint && $scope.totalCredits);
+        };
 
         //Helper functions to determine if input is valid
         $scope.creditCheck = function() {
@@ -63,38 +72,29 @@ angular.module("appModule")
                 $http.post('api/dbClass', {class: $scope.classField, grade:$scope.gradeField, credits:$scope.creditField}).success(function(){
                     $scope.getClasses();
                 });
-                totalCredits = totalCredits + parseInt($scope.creditField);
-                totalGradePoint = totalGradePoint + (parseInt($scope.creditField) * parseInt($scope.returnGradeValue($scope.gradeField.toUpperCase())));
+                $scope.totalCredits = $scope.totalCredits + parseInt($scope.creditField);
+                $scope.totalGradePoint = $scope.totalGradePoint + (parseInt($scope.creditField) * parseInt($scope.returnGradeValue($scope.gradeField.toUpperCase())));
                 $scope.classField = "";
                 $scope.gradeField = "";
                 $scope.creditField = "";
             }
             checks = 0;
+            $scope.currentGpa();
         };
 
         $scope.removeClass = function (index) {
             $http.delete('/api/dbClass/' + $scope.classes[index]._id).success(function () {
                 $scope.getClasses();
             });
-            var reevaluatedCredits = 0;
-            var reevaluatedGrades = 0;
-            for (var spot=0; spot<classes.length; spot++){
-                reevaluatedCredits += spot.credits;
-                reevaluatedGrades += $scope.returnGradeValue(spot.grade);
-            }
-            totalCredits = reevaluatedCredits;
-            totalGradePoint = totalCredits * reevaluatedGrades;
+            $scope.updateGPA();
             $scope.currentGpa();
         };
 
         //More helper functions for correctly displaying the GPA
         $scope.currentGpa = function(){
-            return (totalGradePoint/totalCredits).toFixed(3);
+            return ($scope.totalGradePoint/$scope.totalCredits).toFixed(3);
         };
 
-        $scope.totalCredits = function(){
-            return totalCredits;
-        };
 
         $scope.returnGradeValue = function(str){
             if (str === "A") {
