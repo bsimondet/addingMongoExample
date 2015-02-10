@@ -11,8 +11,23 @@ angular.module("appModule")
 
         $scope.creditField = "";
 
-        $scope.totalCredits = 0;
-        $scope.totalGradePoint = 0;
+        var totalCredits = 0;
+        var totalGradePoint = 0;
+
+        $scope.totalCreditsFunction = function(totalCredits){
+            for(var thing = 0; thing < $scope.classes.length; thing++){
+                totalCredits += classes[thing].credits;
+            }
+            return totalCredits;
+        };
+
+        $scope.totalGradePointFunction = function(totalGradePoint){
+            for(var thing = 0; thing < $scope.classes.length; thing++) {
+                totalGradePoint += ($scope.classes[i].grade * $scope.classes[i].credits);
+            }
+            return totalGradePoint;
+        };
+
         var checks = 0;
 
         // Normally, data like this would be stored in a database, and this controller would issue an http:get request for it.
@@ -26,38 +41,29 @@ angular.module("appModule")
         };
         $scope.getClasses();
 
-        //Is supposed to continuously update the GPA
-        $scope.updateGPA = function() {
-            for (var i = 0; i < $scope.classes.length; i++){
-                $scope.totalCredits += $scope.classes[i].credits;
-                $scope.totalGradePoint += ($scope.classes[i].grade * $scope.classes[i].credits)/$scope.totalCredits;
-            }
-            return ($scope.totalGradePoint && $scope.totalCredits);
-        };
-
         //Helper functions to determine if input is valid
-        $scope.creditCheck = function() {
-            if (!$scope.creditField.length === 1) {
+        $scope.creditCheck = function(num) {
+            if (!num.length === 1) {
                 alert("Please submit a valid number of credits.");
                 checks++;
-            } else if (isNaN($scope.creditField)) {
+            } else if (isNaN(num)) {
                 alert("Please submit a valid number of credits.");
                 checks++;
             }
         };
 
-        $scope.gradeCheck = function() {
-            if(!$scope.gradeField.length == 1) {
+        $scope.gradeCheck = function(str) {
+            if(!str.length == 1) {
                 alert("Please submit a letter grade without a plus or minus.");
                 checks++;
-            } else if(!isNaN($scope.gradeField)){
+            } else if(!isNaN(str)){
                 alert("Please submit a letter grade without a plus or minus.");
                 checks++;
             }
         };
 
-        $scope.classCheck = function() {
-            if (!$scope.classField.length >= 1) {
+        $scope.classCheck = function(str) {
+            if (!str.length >= 1) {
                 alert("Please submit a class name.");
                 checks++;
             }
@@ -65,9 +71,9 @@ angular.module("appModule")
 
         //Main GPA functions
         $scope.addClass = function () {
-            $scope.classCheck();
-            $scope.gradeCheck();
-            $scope.creditCheck();
+            $scope.classCheck($scope.classField);
+            $scope.gradeCheck($scope.gradeField);
+            $scope.creditCheck(scope.creditField);
             if (checks === 0) {
                 $http.post('api/dbClass', {class: $scope.classField, grade:$scope.gradeField, credits:$scope.creditField}).success(function(){
                     $scope.getClasses();
@@ -79,20 +85,18 @@ angular.module("appModule")
                 $scope.creditField = "";
             }
             checks = 0;
-            $scope.currentGpa();
         };
 
         $scope.removeClass = function (index) {
             $http.delete('/api/dbClass/' + $scope.classes[index]._id).success(function () {
                 $scope.getClasses();
+                $scope.currentGpa();
             });
-            $scope.updateGPA();
-            $scope.currentGpa();
         };
 
         //More helper functions for correctly displaying the GPA
         $scope.currentGpa = function(){
-            return ($scope.totalGradePoint/$scope.totalCredits).toFixed(3);
+            return ($scope.totalGradePointFunction(totalGradePoint)/$scope.totalCreditsFunction(totalCredits)).toFixed(3);
         };
 
 
